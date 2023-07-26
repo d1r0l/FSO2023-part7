@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/no-unescaped-entities */
 import ReactDOM from 'react-dom/client'
 import { useState } from 'react'
 
@@ -7,9 +9,9 @@ import {
   Route,
   Link,
   Navigate,
-  useMatch, 
+  useMatch,
   useNavigate,
-} from "react-router-dom"
+} from 'react-router-dom'
 
 
 const Home = () => (
@@ -80,7 +82,7 @@ const Login = (props) => {
 
 const App = () => {
   // eslint-disable-next-line no-unused-vars
-  const [notes, setNotes] = useState([
+  const [ notes, setNotes ] = useState([
     {
       id: 1,
       content: 'HTML is easy',
@@ -101,7 +103,7 @@ const App = () => {
     }
   ])
 
-  const [user, setUser] = useState(null)
+  const [ user, setUser ] = useState(null)
 
   const login = (user) => {
     setUser(user)
@@ -112,7 +114,7 @@ const App = () => {
   }
 
   const match = useMatch('/notes/:id')
-  const note = match 
+  const note = match
     ? notes.find(note => note.id === Number(match.params.id))
     : null
 
