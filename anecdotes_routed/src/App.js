@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
 import { useState } from 'react'
+import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
 
 const Menu = () => {
   const padding = {
@@ -8,9 +9,9 @@ const Menu = () => {
   }
   return (
     <div>
-      <a href='#' style={padding}>anecdotes</a>
-      <a href='#' style={padding}>create new</a>
-      <a href='#' style={padding}>about</a>
+      <Link to='/' style={padding}>anecdotes</Link>
+      <Link to='/create' style={padding}>create new</Link>
+      <Link to='/about' style={padding}>about</Link>
     </div>
   )
 }
@@ -40,9 +41,9 @@ const About = () => (
 
 const Footer = () => (
   <div>
-    Anecdote app for <a href='https://fullstackopen.com/'>Full Stack Open</a>.
+    Anecdote app for <a href='https://fullstackopen.com/en/'>Full Stack Open</a>.
 
-    See <a href='https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js'>https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js</a> for the source code.
+    See <a href='https://github.com/d1r0l/FSO2023-part7/tree/main/anecdotes_routed'>GitHub repository</a> for the source code.
   </div>
 )
 
@@ -80,6 +81,7 @@ const CreateNew = (props) => {
         </div>
         <button>create</button>
       </form>
+      <br/>
     </div>
   )
 
@@ -128,12 +130,16 @@ const App = () => {
 
   return (
     <div>
-      <h1>Software anecdotes</h1>
-      <Menu />
-      <AnecdoteList anecdotes={anecdotes} />
-      <About />
-      <CreateNew addNew={addNew} />
-      <Footer />
+      <BrowserRouter>
+        <h1>Software anecdotes</h1>
+        <Menu />
+        <Routes>
+          <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
+          <Route path="/create" element={<CreateNew addNew={addNew} />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
     </div>
   )
 }
