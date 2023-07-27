@@ -2,4 +2,6 @@
 
 ## Folder "anecdotes_routed" contains exercises 7.1-7.6
 
-## Folder "countries_hook" contains exercises 7.7-7.x
+## Folder "countries_hook" contains exercise 7.7
+
+## Folder "ultimate_hooks" contains exercise 7.8
