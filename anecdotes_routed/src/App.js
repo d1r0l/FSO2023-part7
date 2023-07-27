@@ -76,9 +76,9 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const content = useTextField('content', 'text')
-  const author = useTextField('author', 'text')
-  const info = useTextField('info', 'text')
+  const content = useTextField('content')
+  const author = useTextField('author')
+  const info = useTextField('info')
 
   const navigate = useNavigate()
 
@@ -94,10 +94,11 @@ const CreateNew = (props) => {
     navigate('/')
   }
 
-  const handleReset = () => {
-    content.reset()
-    author.reset()
-    info.reset()
+  const handleReset = (e) => {
+    e.preventDefault()
+    content.onReset()
+    author.onReset()
+    info.onReset()
   }
 
   return (
@@ -122,7 +123,6 @@ const CreateNew = (props) => {
       <br/>
     </div>
   )
-
 }
 
 const App = () => {

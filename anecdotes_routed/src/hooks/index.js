@@ -7,7 +7,7 @@ export const useTextField = (name) => {
     setValue(e.target.value)
   }
 
-  const reset = () => {
+  const onReset = () => {
     setValue('')
   }
 
@@ -15,6 +15,6 @@ export const useTextField = (name) => {
     name,
     value,
     onChange,
-    reset
+    onReset
   }
 }
