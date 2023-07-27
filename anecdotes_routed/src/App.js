@@ -1,8 +1,15 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
-import { useState } from 'react'
-import { BrowserRouter, Link, Route, Routes, useMatch } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import {
+  BrowserRouter,
+  Link,
+  Route,
+  Routes,
+  useMatch,
+  useNavigate
+} from 'react-router-dom'
 
 const Menu = () => {
   const padding = {
@@ -146,15 +153,21 @@ const App = () => {
     setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
   }
 
+  const RouteRedirectTo = ({ address }) => {
+    const navigate = useNavigate()
+    useEffect(() => {navigate(address)}, [])
+    return null
+  }
+
   return (
     <div>
       <BrowserRouter>
         <h1>Software anecdotes</h1>
         <Menu />
         <Routes>
-          <Route path="/anecdotes/:id" element={<Anecdote anecdotes={anecdotes} />} />
           <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
-          <Route path="/anecdotes" element={<AnecdoteList anecdotes={anecdotes} />} />
+          <Route path="/anecdotes" element={<RouteRedirectTo address={'/'} />} />
+          <Route path="/anecdotes/:id" element={<Anecdote anecdotes={anecdotes} />} />
           <Route path="/create" element={<CreateNew addNew={addNew} />} />
           <Route path="/about" element={<About />} />
         </Routes>
