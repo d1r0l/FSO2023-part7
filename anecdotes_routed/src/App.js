@@ -10,7 +10,7 @@ import {
   useMatch,
   useNavigate
 } from 'react-router-dom'
-import { useField } from './hooks'
+import { useTextField } from './hooks'
 
 const Menu = () => {
   const padding = {
@@ -76,9 +76,9 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const content = useField('content', 'text')
-  const author = useField('author', 'text')
-  const info = useField('info', 'text')
+  const content = useTextField('content', 'text')
+  const author = useTextField('author', 'text')
+  const info = useTextField('info', 'text')
 
   const navigate = useNavigate()
 
@@ -94,10 +94,16 @@ const CreateNew = (props) => {
     navigate('/')
   }
 
+  const handleReset = () => {
+    content.reset()
+    author.reset()
+    info.reset()
+  }
+
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} onReset={handleReset}>
         <div>
           content
           <input {...content} />
@@ -110,7 +116,8 @@ const CreateNew = (props) => {
           url for more info
           <input {...info} />
         </div>
-        <button>create</button>
+        <button type='submit'>create</button>
+        <button type='reset'>reset</button>
       </form>
       <br/>
     </div>
