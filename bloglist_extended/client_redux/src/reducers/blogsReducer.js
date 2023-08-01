@@ -54,7 +54,6 @@ export const createBlog = (newBlog, activeUser) => {
         }
       }
       dispatch(appendBlog(savedBlogWithUser))
-      // blogFormRef.current.toggleVisibility()
       dispatch(
         makeNotification({
           text: `a new blog "${respondedBlog.title}" by "${respondedBlog.author}" added`,

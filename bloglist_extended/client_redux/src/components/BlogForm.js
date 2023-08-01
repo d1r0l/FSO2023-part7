@@ -17,6 +17,7 @@ const BlogForm = ({ activeUser }) => {
       url: url
     }
     dispatch(createBlog(newBlog, activeUser))
+    // blogFormRef.current.toggleVisibility()
     setTitle('')
     setAuthor('')
     setUrl('')
