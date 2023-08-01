@@ -6,7 +6,7 @@ const getAll = async () => {
   return request
 }
 
-const authConfig = (token) => {
+const authConfig = token => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`
@@ -21,7 +21,11 @@ const createNew = async (newBlog, token) => {
 }
 
 const addLike = async (Blog, token) => {
-  const request = await axios.put(`${baseUrl}/${Blog.id}`, Blog, authConfig(token))
+  const request = await axios.put(
+    `${baseUrl}/${Blog.id}`,
+    Blog,
+    authConfig(token)
+  )
   return request.data
 }
 

@@ -9,7 +9,9 @@ describe('<BlogForm />', () => {
     const handleCreateBlog = jest.fn()
     const user = userEvent.setup()
 
-    const { container } = render(<BlogForm handleCreateBlog={handleCreateBlog}/>)
+    const { container } = render(
+      <BlogForm handleCreateBlog={handleCreateBlog} />
+    )
     const titleInput = container.querySelector('input[name="title"]')
     const authorInput = container.querySelector('input[name="author"]')
     const urlInput = container.querySelector('input[name="url"]')

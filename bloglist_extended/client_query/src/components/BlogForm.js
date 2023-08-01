@@ -2,11 +2,11 @@ import { useState } from 'react'
 import PropTypes from 'prop-types'
 
 const BlogForm = ({ handleCreateBlog }) => {
-  const [ title, setTitle ] = useState('')
-  const [ author, setAuthor ] = useState('')
-  const [ url, setUrl ] = useState('')
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
-  const handleSubmit = (event) => {
+  const handleSubmit = event => {
     event.preventDefault()
     const newBlog = {
       title: title,
@@ -29,7 +29,7 @@ const BlogForm = ({ handleCreateBlog }) => {
         value={title}
         onChange={({ target }) => setTitle(target.value)}
       />
-      <br/>
+      <br />
       author:
       <input
         id='input-author'
@@ -38,7 +38,7 @@ const BlogForm = ({ handleCreateBlog }) => {
         value={author}
         onChange={({ target }) => setAuthor(target.value)}
       />
-      <br/>
+      <br />
       url:
       <input
         id='input-url'
@@ -47,8 +47,10 @@ const BlogForm = ({ handleCreateBlog }) => {
         value={url}
         onChange={({ target }) => setUrl(target.value)}
       />
-      <br/>
-      <button id='button-create' type='submit'>create</button>
+      <br />
+      <button id='button-create' type='submit'>
+        create
+      </button>
     </form>
   )
 }

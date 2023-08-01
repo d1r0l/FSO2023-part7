@@ -2,10 +2,10 @@ import { useState } from 'react'
 import PropTypes from 'prop-types'
 
 const LoginForm = ({ handleLogin }) => {
-  const [ username, setUsername ] = useState('')
-  const [ password, setPassword ] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
-  const handleSubmit = (event) => {
+  const handleSubmit = event => {
     event.preventDefault()
     const credentials = {
       username: username,
@@ -38,7 +38,9 @@ const LoginForm = ({ handleLogin }) => {
           onChange={({ target }) => setPassword(target.value)}
         />
         <br />
-        <button id='button-login' type='submit'>login</button>
+        <button id='button-login' type='submit'>
+          login
+        </button>
       </form>
     </div>
   )

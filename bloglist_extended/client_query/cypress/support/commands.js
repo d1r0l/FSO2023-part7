@@ -29,7 +29,7 @@ Cypress.Commands.add('resetDB', () => {
 })
 
 Cypress.Commands.add('createUser', (username, password, name) => {
-  cy.request('POST', `${Cypress.env('server_api_url')}/users`,{
+  cy.request('POST', `${Cypress.env('server_api_url')}/users`, {
     username: username,
     password: password,
     name: name
@@ -45,11 +45,11 @@ Cypress.Commands.add('createBlog', (title, author, url, likes) => {
       title: title,
       author: author,
       url: url,
-      likes: (likes ? likes : 0),
+      likes: likes ? likes : 0,
       user: userData.id
     },
     headers: {
-      'Authorization': `Bearer ${userData.token}`
+      Authorization: `Bearer ${userData.token}`
     }
   })
 })

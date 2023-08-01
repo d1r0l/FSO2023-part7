@@ -8,14 +8,14 @@ import loginService from './services/login'
 import Togglable from './components/Togglable'
 
 const App = () => {
-  const [ blogs, setBlogs ] = useState([])
-  const [ user, setUser ] = useState(null)
-  const [ notifyColor, setNotifyColor ] = useState('green')
-  const [ notifyText, setNotifyText ] = useState('')
+  const [blogs, setBlogs] = useState([])
+  const [user, setUser] = useState(null)
+  const [notifyColor, setNotifyColor] = useState('green')
+  const [notifyText, setNotifyText] = useState('')
 
   const blogFormRef = useRef()
 
-  const sortBlogs = (blogs) => blogs.sort((a, b) => b.likes - a.likes)
+  const sortBlogs = blogs => blogs.sort((a, b) => b.likes - a.likes)
 
   useEffect(() => {
     const blogsLoader = async () => {
@@ -33,10 +33,13 @@ const App = () => {
     }
   }, [])
 
-  const handleLogin = async (credentials) => {
+  const handleLogin = async credentials => {
     const loggedUser = await loginService(credentials)
     if (loggedUser) {
-      window.localStorage.setItem('loggedBloglistAppUser', JSON.stringify(loggedUser))
+      window.localStorage.setItem(
+        'loggedBloglistAppUser',
+        JSON.stringify(loggedUser)
+      )
       setUser(loggedUser)
       setNotification('login successful', 'green')
     } else {
@@ -50,7 +53,7 @@ const App = () => {
     setNotification('logged out', 'green')
   }
 
-  const handleCreateBlog = async (newBlog) => {
+  const handleCreateBlog = async newBlog => {
     try {
       const savedBlog = await blogService.createNew(newBlog, user.token)
       const savedBlogWithUser = {
@@ -64,7 +67,10 @@ const App = () => {
       const updatedBlogs = blogs.concat(savedBlogWithUser)
       blogFormRef.current.toggleVisibility()
       setBlogs(updatedBlogs)
-      setNotification(`a new blog "${savedBlog.title}" by "${savedBlog.author}" added`, 'green')
+      setNotification(
+        `a new blog "${savedBlog.title}" by "${savedBlog.author}" added`,
+        'green'
+      )
     } catch (error) {
       console.log(error)
       if (error.response.data.error) {
@@ -75,18 +81,23 @@ const App = () => {
     }
   }
 
-  const handleLikeBlog = async (selectedBlog) => {
+  const handleLikeBlog = async selectedBlog => {
     try {
-      const requestBlog = { ...selectedBlog, likes: selectedBlog.likes + 1, user: selectedBlog.user.id }
+      const requestBlog = {
+        ...selectedBlog,
+        likes: selectedBlog.likes + 1,
+        user: selectedBlog.user.id
+      }
       const responseBlog = await blogService.addLike(requestBlog, user.token)
       const updatedBlog = { ...responseBlog, user: selectedBlog.user }
       const updatedBlogs = blogs.map(blog =>
-        blog.id === responseBlog.id
-          ? updatedBlog
-          : blog
+        blog.id === responseBlog.id ? updatedBlog : blog
       )
       setBlogs(updatedBlogs)
-      setNotification(`a blog "${responseBlog.title}" by "${responseBlog.author}" likes updated`, 'green')
+      setNotification(
+        `a blog "${responseBlog.title}" by "${responseBlog.author}" likes updated`,
+        'green'
+      )
     } catch (error) {
       console.log(error)
       if (error.response.data.error) {
@@ -97,13 +108,20 @@ const App = () => {
     }
   }
 
-  const handleDeleteBlog = async (selectedBlog) => {
-    if (window.confirm(`Remove blog "${selectedBlog.title}" by "${selectedBlog.author}"?`)) {
+  const handleDeleteBlog = async selectedBlog => {
+    if (
+      window.confirm(
+        `Remove blog "${selectedBlog.title}" by "${selectedBlog.author}"?`
+      )
+    ) {
       try {
         await blogService.deleteBlog(selectedBlog, user.token)
-        const updatedBlogs = blogs.filter((blog) => blog.id !== selectedBlog.id)
+        const updatedBlogs = blogs.filter(blog => blog.id !== selectedBlog.id)
         setBlogs(updatedBlogs)
-        setNotification(`a blog "${selectedBlog.title}" by "${selectedBlog.author}" deleted`, 'green')
+        setNotification(
+          `a blog "${selectedBlog.title}" by "${selectedBlog.author}" deleted`,
+          'green'
+        )
       } catch (error) {
         console.log(error)
         if (error.response.data.error) {
@@ -122,7 +140,7 @@ const App = () => {
   }
 
   const blogList = () => {
-    return(
+    return (
       <div>
         <p>
           {user.name} logged in&nbsp;
@@ -131,11 +149,11 @@ const App = () => {
           </button>
         </p>
         <Togglable buttonLabel='new blog' ref={blogFormRef}>
-          <BlogForm handleCreateBlog={handleCreateBlog}/>
+          <BlogForm handleCreateBlog={handleCreateBlog} />
         </Togglable>
-        <br/>
+        <br />
         <div>
-          {sortBlogs(blogs).map((blog) => (
+          {sortBlogs(blogs).map(blog => (
             <Blog
               key={blog.id}
               blog={blog}
@@ -152,11 +170,8 @@ const App = () => {
   return (
     <div>
       <h2>Blogs</h2>
-      <Notification text={notifyText} color={notifyColor}/>
-      {user
-        ? blogList()
-        : <LoginForm handleLogin={handleLogin}/>
-      }
+      <Notification text={notifyText} color={notifyColor} />
+      {user ? blogList() : <LoginForm handleLogin={handleLogin} />}
     </div>
   )
 }
