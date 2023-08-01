@@ -8,7 +8,7 @@ const loginService = async credentials => {
       .then(response => response.data)
     return request
   } catch (error) {
-    console.log(error.message)
+    null
   }
 }
 

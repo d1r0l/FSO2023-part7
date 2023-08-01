@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { initializeBlogs, likeBlog, deleteBlog } from './reducers/blogsReducer'
-import { initializeUser, logoutUser } from './reducers/activeUserReducer'
+import { initializeUser, logoutUser } from './reducers/loggedUserReducer'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
@@ -11,8 +11,8 @@ import Togglable from './components/Togglable'
 const App = () => {
   const blogsSelector = state => state.blogs
   const blogs = useSelector(blogsSelector)
-  const loggedUserSelector = state => state.activeUser
-  const activeUser = useSelector(loggedUserSelector)
+  const loggedUserSelector = state => state.loggedUser
+  const loggedUser = useSelector(loggedUserSelector)
 
   const blogFormRef = useRef()
 
@@ -29,13 +29,13 @@ const App = () => {
     return (
       <div>
         <p>
-          {activeUser.name} logged in&nbsp;
+          {loggedUser.name} logged in&nbsp;
           <button type='button' onClick={() => dispatch(logoutUser())}>
             logout
           </button>
         </p>
         <Togglable buttonLabel='new blog' ref={blogFormRef}>
-          <BlogForm activeUser={activeUser} />
+          <BlogForm loggedUser={loggedUser} />
         </Togglable>
         <br />
         <div>
@@ -43,9 +43,9 @@ const App = () => {
             <Blog
               key={blog.id}
               blog={blog}
-              user={activeUser}
-              handleLikeClick={() => dispatch(likeBlog(blog, activeUser))}
-              handleDeleteClick={() => dispatch(deleteBlog(blog, activeUser))}
+              user={loggedUser}
+              handleLikeClick={() => dispatch(likeBlog(blog, loggedUser))}
+              handleDeleteClick={() => dispatch(deleteBlog(blog, loggedUser))}
             />
           ))}
         </div>
@@ -57,7 +57,7 @@ const App = () => {
     <div>
       <h2>Blogs</h2>
       <Notification />
-      {activeUser ? blogList() : <LoginForm />}
+      {loggedUser ? blogList() : <LoginForm />}
     </div>
   )
 }
