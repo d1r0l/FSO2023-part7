@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useNotificationSet } from './components/NotificationContext'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
@@ -10,8 +11,7 @@ import Togglable from './components/Togglable'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [notifyColor, setNotifyColor] = useState('green')
-  const [notifyText, setNotifyText] = useState('')
+  const setNotification = useNotificationSet()
 
   const blogFormRef = useRef()
 
@@ -34,16 +34,22 @@ const App = () => {
   }, [])
 
   const handleLogin = async credentials => {
-    const loggedUser = await loginService(credentials)
-    if (loggedUser) {
-      window.localStorage.setItem(
-        'loggedBloglistAppUser',
-        JSON.stringify(loggedUser)
-      )
-      setUser(loggedUser)
-      setNotification('login successful', 'green')
-    } else {
-      setNotification('wrong credentials', 'red')
+    try {
+      const loggedUser = await loginService(credentials)
+      if (loggedUser) {
+        window.localStorage.setItem(
+          'loggedBloglistAppUser',
+          JSON.stringify(loggedUser)
+        )
+        setUser(loggedUser)
+        setNotification('login successful', 'green')
+      }
+    } catch (error) {
+      if (error.response.status === 401) {
+        setNotification('wrong credentials', 'red')
+      } else {
+        setNotification('some error occured', 'red')
+      }
     }
   }
 
@@ -72,7 +78,6 @@ const App = () => {
         'green'
       )
     } catch (error) {
-      console.log(error)
       if (error.response.data.error) {
         setNotification(error.response.data.error, 'red')
       } else {
@@ -99,7 +104,6 @@ const App = () => {
         'green'
       )
     } catch (error) {
-      console.log(error)
       if (error.response.data.error) {
         setNotification(error.response.data.error, 'red')
       } else {
@@ -123,7 +127,6 @@ const App = () => {
           'green'
         )
       } catch (error) {
-        console.log(error)
         if (error.response.data.error) {
           setNotification(error.response.data.error, 'red')
         } else {
@@ -131,12 +134,6 @@ const App = () => {
         }
       }
     }
-  }
-
-  const setNotification = (text, color) => {
-    setNotifyText(text)
-    setNotifyColor(color)
-    setTimeout(() => setNotifyText(''), 2500)
   }
 
   const blogList = () => {
@@ -170,7 +167,7 @@ const App = () => {
   return (
     <div>
       <h2>Blogs</h2>
-      <Notification text={notifyText} color={notifyColor} />
+      <Notification />
       {user ? blogList() : <LoginForm handleLogin={handleLogin} />}
     </div>
   )

@@ -1,6 +1,10 @@
-import PropTypes from 'prop-types'
+import { useNotificationValue } from './NotificationContext'
 
-const Notification = ({ text, color }) => {
+const Notification = () => {
+  const notification = useNotificationValue()
+  const text = notification.text
+  const color = notification.color
+
   if (text === '') return null
   else {
     return (
@@ -19,11 +23,6 @@ const Notification = ({ text, color }) => {
       </div>
     )
   }
-}
-
-Notification.propTypes = {
-  text: PropTypes.string.isRequired,
-  color: PropTypes.string.isRequired
 }
 
 export default Notification
