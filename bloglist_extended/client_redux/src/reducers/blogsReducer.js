@@ -60,6 +60,7 @@ export const createBlog = (newBlog, activeUser) => {
           color: 'green'
         })
       )
+      return true
     } catch (error) {
       if (error.response.data.error) {
         dispatch(
@@ -68,6 +69,7 @@ export const createBlog = (newBlog, activeUser) => {
       } else {
         dispatch(makeNotification({ text: 'an error occured', color: 'red' }))
       }
+      return false
     }
   }
 }

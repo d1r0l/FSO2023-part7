@@ -1,28 +1,32 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createBlog } from '../reducers/blogsReducer'
 
-const BlogForm = ({ activeUser, blogFormRef }) => {
+const BlogForm = ({ blogFormRef }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const loggedUserSelector = state => state.activeUser
+  const activeUser = useSelector(loggedUserSelector)
   const dispatch = useDispatch()
 
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
     event.preventDefault()
     const newBlog = {
       title: title,
       author: author,
       url: url
     }
-    dispatch(createBlog(newBlog, activeUser))
-    if (blogFormRef) {
-      blogFormRef.current.toggleVisibility()
+    const dispatchSuccessful = await dispatch(createBlog(newBlog, activeUser))
+    if (dispatchSuccessful) {
+      if (blogFormRef) {
+        blogFormRef.current.toggleVisibility()
+      }
+      setTitle('')
+      setAuthor('')
+      setUrl('')
     }
-    setTitle('')
-    setAuthor('')
-    setUrl('')
   }
 
   return (
@@ -62,7 +66,6 @@ const BlogForm = ({ activeUser, blogFormRef }) => {
 }
 
 BlogForm.propTypes = {
-  activeUser: PropTypes.object.isRequired,
   blogFormRef: PropTypes.object
 }
 

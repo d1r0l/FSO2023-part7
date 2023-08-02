@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { initializeBlogs, likeBlog, deleteBlog } from './reducers/blogsReducer'
+import { initializeBlogs } from './reducers/blogsReducer'
 import { initializeUser, logoutUser } from './reducers/activeUserReducer'
 import Blog from './components/Blog'
-import Notification from './components/Notification'
-import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import LoginForm from './components/LoginForm'
+import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 
 const App = () => {
@@ -35,18 +35,12 @@ const App = () => {
           </button>
         </p>
         <Togglable buttonLabel='new blog' ref={blogFormRef}>
-          <BlogForm activeUser={activeUser} blogFormRef={blogFormRef} />
+          <BlogForm blogFormRef={blogFormRef} />
         </Togglable>
         <br />
         <div>
           {sortBlogs(blogs).map(blog => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              user={activeUser}
-              handleLikeClick={() => dispatch(likeBlog(blog, activeUser))}
-              handleDeleteClick={() => dispatch(deleteBlog(blog, activeUser))}
-            />
+            <Blog key={blog.id} blog={blog} />
           ))}
         </div>
       </div>

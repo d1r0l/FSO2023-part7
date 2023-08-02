@@ -1,8 +1,14 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
+import { useDispatch, useSelector } from 'react-redux'
+import { likeBlog, deleteBlog } from '../reducers/blogsReducer'
 
-const Blog = ({ blog, user, handleLikeClick, handleDeleteClick }) => {
+const Blog = ({ blog }) => {
   const [visible, setVisible] = useState(false)
+  const loggedUserSelector = state => state.activeUser
+  const activeUser = useSelector(loggedUserSelector)
+
+  const dispatch = useDispatch()
 
   const toggleVisibility = () => setVisible(!visible)
 
@@ -31,12 +37,16 @@ const Blog = ({ blog, user, handleLikeClick, handleDeleteClick }) => {
         <span>{blog.url}</span>
         <br />
         <span>likes: {blog.likes} </span>
-        <button onClick={handleLikeClick}>like</button>
+        <button onClick={() => dispatch(likeBlog(blog, activeUser))}>
+          like
+        </button>
         <br />
         <span>{blog.user.name}</span>
         <br />
-        {blog.user.id === user.id && (
-          <button onClick={handleDeleteClick}>delete</button>
+        {blog.user.id === activeUser.id && (
+          <button onClick={() => dispatch(deleteBlog(blog, activeUser))}>
+            delete
+          </button>
         )}
       </div>
     </div>
@@ -44,10 +54,7 @@ const Blog = ({ blog, user, handleLikeClick, handleDeleteClick }) => {
 }
 
 Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
-  handleLikeClick: PropTypes.func.isRequired,
-  handleDeleteClick: PropTypes.func.isRequired
+  blog: PropTypes.object.isRequired
 }
 
 export default Blog
