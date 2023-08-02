@@ -35,7 +35,7 @@ const App = () => {
           </button>
         </p>
         <Togglable buttonLabel='new blog' ref={blogFormRef}>
-          <BlogForm activeUser={activeUser} />
+          <BlogForm activeUser={activeUser} blogFormRef={blogFormRef} />
         </Togglable>
         <br />
         <div>
