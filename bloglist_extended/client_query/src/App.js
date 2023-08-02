@@ -64,18 +64,21 @@ const App = () => {
   const queryClient = useQueryClient()
 
   const createBlogMutation = useMutation({
-    mutationFn: newBlog => blogService.createNew(newBlog, user.token),
-    onSuccess: savedBlog => {
-      const savedBlogWithUser = {
-        ...savedBlog,
+    mutationFn: async newBlog => {
+      const responseBlog = await blogService.createNew(newBlog, user.token)
+      const updatedBlog = {
+        ...responseBlog,
         user: {
           name: user?.name,
           username: user?.username,
           id: user?.id
         }
       }
+      return updatedBlog
+    },
+    onSuccess: savedBlog => {
       const blogs = queryClient.getQueryData(['blogs'])
-      queryClient.setQueryData(['blogs'], () => blogs.concat(savedBlogWithUser))
+      queryClient.setQueryData(['blogs'], () => blogs.concat(savedBlog))
       setNotification(
         `a new blog "${savedBlog.title}" by "${savedBlog.author}" added`,
         'green'
@@ -90,55 +93,67 @@ const App = () => {
     }
   })
 
-  const handleLikeBlog = async selectedBlog => {
-    try {
-      const requestBlog = {
+  const likeBlogMutation = useMutation({
+    mutationFn: async selectedBlog => {
+      const preparedBlog = {
         ...selectedBlog,
         likes: selectedBlog.likes + 1,
         user: selectedBlog.user.id
       }
-      const responseBlog = await blogService.addLike(requestBlog, user.token)
+      const responseBlog = await blogService.addLike(preparedBlog, user.token)
       const updatedBlog = { ...responseBlog, user: selectedBlog.user }
-      const updatedBlogs = blogs.map(blog =>
-        blog.id === responseBlog.id ? updatedBlog : blog
+      return updatedBlog
+    },
+    onSuccess: savedBlog => {
+      const blogs = queryClient.getQueryData(['blogs'])
+      queryClient.setQueryData(['blogs'], () =>
+        blogs.map(blog => (blog.id === savedBlog.id ? savedBlog : blog))
       )
-      setBlogs(updatedBlogs)
       setNotification(
-        `a blog "${responseBlog.title}" by "${responseBlog.author}" likes updated`,
+        `a blog "${savedBlog.title}" by "${savedBlog.author}" likes updated`,
         'green'
       )
-    } catch (error) {
+    },
+    onError: error => {
       if (error.response.data.error) {
         setNotification(error.response.data.error, 'red')
       } else {
         setNotification('an error occured', 'red')
       }
     }
-  }
+  })
 
-  const handleDeleteBlog = async selectedBlog => {
-    if (
-      window.confirm(
-        `Remove blog "${selectedBlog.title}" by "${selectedBlog.author}"?`
-      )
-    ) {
-      try {
+  const deleteBlogMutation = useMutation({
+    mutationFn: async selectedBlog => {
+      if (
+        window.confirm(
+          `Remove blog "${selectedBlog.title}" by "${selectedBlog.author}"?`
+        )
+      ) {
         await blogService.deleteBlog(selectedBlog, user.token)
-        const updatedBlogs = blogs.filter(blog => blog.id !== selectedBlog.id)
-        setBlogs(updatedBlogs)
+        return selectedBlog
+      } else return null
+    },
+    onSuccess: deletedBlog => {
+      if (deletedBlog) {
+        const blogs = queryClient.getQueryData(['blogs'])
+        queryClient.setQueryData(['blogs'], () =>
+          blogs.filter(blog => blog.id !== deletedBlog.id)
+        )
         setNotification(
-          `a blog "${selectedBlog.title}" by "${selectedBlog.author}" deleted`,
+          `a blog "${deletedBlog.title}" by "${deletedBlog.author}" deleted`,
           'green'
         )
-      } catch (error) {
-        if (error.response.data.error) {
-          setNotification(error.response.data.error, 'red')
-        } else {
-          setNotification('an error occured', 'red')
-        }
+      }
+    },
+    onError: error => {
+      if (error.response.data.error) {
+        setNotification(error.response.data.error, 'red')
+      } else {
+        setNotification('an error occured', 'red')
       }
     }
-  }
+  })
 
   const blogList = () => {
     return (
@@ -161,8 +176,8 @@ const App = () => {
               key={blog.id}
               blog={blog}
               user={user}
-              handleLikeClick={() => handleLikeBlog(blog)}
-              handleDeleteClick={() => handleDeleteBlog(blog)}
+              handleLikeClick={() => likeBlogMutation.mutate(blog)}
+              handleDeleteClick={() => deleteBlogMutation.mutate(blog)}
             />
           ))}
         </div>
