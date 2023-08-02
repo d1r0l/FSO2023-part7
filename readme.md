@@ -5,3 +5,9 @@
 ## Folder "countries_hook" contains exercise 7.7
 
 ## Folder "ultimate_hooks" contains exercise 7.8
+
+## Results of ex 7.9 are used in all next excercises
+
+## Folder "bloglist_extended/client_redux" contains excercises 7.10 - 7.11 for Redux version
+
+## Folder "bloglist_extended/client_query" contains excercises 7.10 - 7.11 for Query version
