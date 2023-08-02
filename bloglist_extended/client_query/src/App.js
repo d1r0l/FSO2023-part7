@@ -1,17 +1,15 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNotificationSet } from './components/NotificationContext'
-import Blog from './components/Blog'
-import Notification from './components/Notification'
-import LoginForm from './components/LoginForm'
-import BlogForm from './components/BlogForm'
+import { useQuery } from '@tanstack/react-query'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Blog from './components/Blog'
+import BlogForm from './components/BlogForm'
+import LoginForm from './components/LoginForm'
+import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
 
 const App = () => {
-  // eslint-disable-next-line no-unused-vars
-  const [anotherblogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const setNotification = useNotificationSet()
 
@@ -61,100 +59,6 @@ const App = () => {
     setNotification('logged out', 'green')
   }
 
-  const queryClient = useQueryClient()
-
-  const createBlogMutation = useMutation({
-    mutationFn: async newBlog => {
-      const responseBlog = await blogService.createNew(newBlog, user.token)
-      const updatedBlog = {
-        ...responseBlog,
-        user: {
-          name: user?.name,
-          username: user?.username,
-          id: user?.id
-        }
-      }
-      return updatedBlog
-    },
-    onSuccess: savedBlog => {
-      const blogs = queryClient.getQueryData(['blogs'])
-      queryClient.setQueryData(['blogs'], () => blogs.concat(savedBlog))
-      setNotification(
-        `a new blog "${savedBlog.title}" by "${savedBlog.author}" added`,
-        'green'
-      )
-    },
-    onError: error => {
-      if (error.response.data.error) {
-        setNotification(error.response.data.error, 'red')
-      } else {
-        setNotification('an error occured', 'red')
-      }
-    }
-  })
-
-  const likeBlogMutation = useMutation({
-    mutationFn: async selectedBlog => {
-      const preparedBlog = {
-        ...selectedBlog,
-        likes: selectedBlog.likes + 1,
-        user: selectedBlog.user.id
-      }
-      const responseBlog = await blogService.addLike(preparedBlog, user.token)
-      const updatedBlog = { ...responseBlog, user: selectedBlog.user }
-      return updatedBlog
-    },
-    onSuccess: savedBlog => {
-      const blogs = queryClient.getQueryData(['blogs'])
-      queryClient.setQueryData(['blogs'], () =>
-        blogs.map(blog => (blog.id === savedBlog.id ? savedBlog : blog))
-      )
-      setNotification(
-        `a blog "${savedBlog.title}" by "${savedBlog.author}" likes updated`,
-        'green'
-      )
-    },
-    onError: error => {
-      if (error.response.data.error) {
-        setNotification(error.response.data.error, 'red')
-      } else {
-        setNotification('an error occured', 'red')
-      }
-    }
-  })
-
-  const deleteBlogMutation = useMutation({
-    mutationFn: async selectedBlog => {
-      if (
-        window.confirm(
-          `Remove blog "${selectedBlog.title}" by "${selectedBlog.author}"?`
-        )
-      ) {
-        await blogService.deleteBlog(selectedBlog, user.token)
-        return selectedBlog
-      } else return null
-    },
-    onSuccess: deletedBlog => {
-      if (deletedBlog) {
-        const blogs = queryClient.getQueryData(['blogs'])
-        queryClient.setQueryData(['blogs'], () =>
-          blogs.filter(blog => blog.id !== deletedBlog.id)
-        )
-        setNotification(
-          `a blog "${deletedBlog.title}" by "${deletedBlog.author}" deleted`,
-          'green'
-        )
-      }
-    },
-    onError: error => {
-      if (error.response.data.error) {
-        setNotification(error.response.data.error, 'red')
-      } else {
-        setNotification('an error occured', 'red')
-      }
-    }
-  })
-
   const blogList = () => {
     return (
       <div>
@@ -165,20 +69,12 @@ const App = () => {
           </button>
         </p>
         <Togglable buttonLabel='new blog' ref={blogFormRef}>
-          <BlogForm
-            handleCreateBlog={props => createBlogMutation.mutate(props)}
-          />
+          <BlogForm user={user} blogFormRef={blogFormRef} />
         </Togglable>
         <br />
         <div>
           {sortBlogs(blogs).map(blog => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              user={user}
-              handleLikeClick={() => likeBlogMutation.mutate(blog)}
-              handleDeleteClick={() => deleteBlogMutation.mutate(blog)}
-            />
+            <Blog key={blog.id} blog={blog} user={user} />
           ))}
         </div>
       </div>

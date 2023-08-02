@@ -1,10 +1,16 @@
 import { useState } from 'react'
+import { useQueryClient, useMutation } from '@tanstack/react-query'
+import { useNotificationSet } from '../components/NotificationContext'
 import PropTypes from 'prop-types'
+import blogService from '../services/blogs'
 
-const BlogForm = ({ handleCreateBlog }) => {
+const BlogForm = ({ user, blogFormRef }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+
+  const setNotification = useNotificationSet()
+  const queryClient = useQueryClient()
 
   const handleSubmit = event => {
     event.preventDefault()
@@ -13,11 +19,44 @@ const BlogForm = ({ handleCreateBlog }) => {
       author: author,
       url: url
     }
-    handleCreateBlog(newBlog)
-    setTitle('')
-    setAuthor('')
-    setUrl('')
+    createBlogMutation.mutate(newBlog)
   }
+
+  const createBlogMutation = useMutation({
+    mutationFn: async newBlog => {
+      const responseBlog = await blogService.createNew(newBlog, user.token)
+      const updatedBlog = {
+        ...responseBlog,
+        user: {
+          name: user?.name,
+          username: user?.username,
+          id: user?.id
+        }
+      }
+      return updatedBlog
+    },
+    onSuccess: savedBlog => {
+      const blogs = queryClient.getQueryData(['blogs'])
+      queryClient.setQueryData(['blogs'], () => blogs.concat(savedBlog))
+      setNotification(
+        `a new blog "${savedBlog.title}" by "${savedBlog.author}" added`,
+        'green'
+      )
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+      if (blogFormRef) {
+        blogFormRef.current.toggleVisibility()
+      }
+    },
+    onError: error => {
+      if (error.response.data.error) {
+        setNotification(error.response.data.error, 'red')
+      } else {
+        setNotification('an error occured', 'red')
+      }
+    }
+  })
 
   return (
     <form onSubmit={handleSubmit} className='blogForm'>
@@ -56,7 +95,8 @@ const BlogForm = ({ handleCreateBlog }) => {
 }
 
 BlogForm.propTypes = {
-  handleCreateBlog: PropTypes.func.isRequired
+  user: PropTypes.object.isRequired,
+  blogFormRef: PropTypes.object
 }
 
 export default BlogForm
