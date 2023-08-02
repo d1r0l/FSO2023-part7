@@ -1,17 +1,19 @@
-import { useState, useEffect, useRef } from 'react'
-import { useNotificationSet } from './components/NotificationContext'
+import { useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import blogService from './services/blogs'
-import loginService from './services/login'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import {
+  useActiveUserRemove,
+  useActiveUserValue
+} from './components/ActiveUserContext'
 
 const App = () => {
-  const [user, setUser] = useState(null)
-  const setNotification = useNotificationSet()
+  const user = useActiveUserValue()
+  const removeUser = useActiveUserRemove()
 
   const blogsQuery = useQuery({
     queryKey: ['blogs'],
@@ -25,51 +27,17 @@ const App = () => {
 
   const sortBlogs = blogs => blogs.sort((a, b) => b.likes - a.likes)
 
-  useEffect(() => {
-    const storedUser = window.localStorage.getItem('loggedBloglistAppUser')
-    if (storedUser) {
-      const loadedUser = JSON.parse(storedUser)
-      setUser(loadedUser)
-    }
-  }, [])
-
-  const handleLogin = async credentials => {
-    try {
-      const loggedUser = await loginService(credentials)
-      if (loggedUser) {
-        window.localStorage.setItem(
-          'loggedBloglistAppUser',
-          JSON.stringify(loggedUser)
-        )
-        setUser(loggedUser)
-        setNotification('login successful', 'green')
-      }
-    } catch (error) {
-      if (error.response.status === 401) {
-        setNotification('wrong credentials', 'red')
-      } else {
-        setNotification('some error occured', 'red')
-      }
-    }
-  }
-
-  const handleLogout = () => {
-    setUser(null)
-    window.localStorage.removeItem('loggedBloglistAppUser')
-    setNotification('logged out', 'green')
-  }
-
   const blogList = () => {
     return (
       <div>
         <p>
           {user.name} logged in&nbsp;
-          <button type='button' onClick={handleLogout}>
+          <button type='button' onClick={() => removeUser()}>
             logout
           </button>
         </p>
         <Togglable buttonLabel='new blog' ref={blogFormRef}>
-          <BlogForm user={user} blogFormRef={blogFormRef} />
+          <BlogForm blogFormRef={blogFormRef} />
         </Togglable>
         <br />
         <div>
@@ -93,7 +61,7 @@ const App = () => {
     <div>
       <h2>Blogs</h2>
       <Notification />
-      {user ? blogList() : <LoginForm handleLogin={handleLogin} />}
+      {user ? blogList() : <LoginForm />}
     </div>
   )
 }

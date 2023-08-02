@@ -3,12 +3,14 @@ import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { useNotificationSet } from '../components/NotificationContext'
 import PropTypes from 'prop-types'
 import blogService from '../services/blogs'
+import { useActiveUserValue } from './ActiveUserContext'
 
-const BlogForm = ({ user, blogFormRef }) => {
+const BlogForm = ({ blogFormRef }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
+  const user = useActiveUserValue()
   const setNotification = useNotificationSet()
   const queryClient = useQueryClient()
 
@@ -95,7 +97,6 @@ const BlogForm = ({ user, blogFormRef }) => {
 }
 
 BlogForm.propTypes = {
-  user: PropTypes.object.isRequired,
   blogFormRef: PropTypes.object
 }
 
