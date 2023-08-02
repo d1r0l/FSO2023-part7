@@ -7,23 +7,25 @@ import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Togglable from './components/Togglable'
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  // eslint-disable-next-line no-unused-vars
+  const [anotherblogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const setNotification = useNotificationSet()
+
+  const blogsQuery = useQuery({
+    queryKey: ['blogs'],
+    queryFn: blogService.getAll,
+    retry: 2,
+    refetchOnWindowFocus: false
+  })
+  const blogs = blogsQuery.data
 
   const blogFormRef = useRef()
 
   const sortBlogs = blogs => blogs.sort((a, b) => b.likes - a.likes)
-
-  useEffect(() => {
-    const blogsLoader = async () => {
-      const response = await blogService.getAll()
-      setBlogs(response)
-    }
-    blogsLoader()
-  }, [])
 
   useEffect(() => {
     const storedUser = window.localStorage.getItem('loggedBloglistAppUser')
@@ -59,9 +61,11 @@ const App = () => {
     setNotification('logged out', 'green')
   }
 
-  const handleCreateBlog = async newBlog => {
-    try {
-      const savedBlog = await blogService.createNew(newBlog, user.token)
+  const queryClient = useQueryClient()
+
+  const createBlogMutation = useMutation({
+    mutationFn: newBlog => blogService.createNew(newBlog, user.token),
+    onSuccess: savedBlog => {
       const savedBlogWithUser = {
         ...savedBlog,
         user: {
@@ -70,21 +74,21 @@ const App = () => {
           id: user?.id
         }
       }
-      const updatedBlogs = blogs.concat(savedBlogWithUser)
-      blogFormRef.current.toggleVisibility()
-      setBlogs(updatedBlogs)
+      const blogs = queryClient.getQueryData(['blogs'])
+      queryClient.setQueryData(['blogs'], () => blogs.concat(savedBlogWithUser))
       setNotification(
         `a new blog "${savedBlog.title}" by "${savedBlog.author}" added`,
         'green'
       )
-    } catch (error) {
+    },
+    onError: error => {
       if (error.response.data.error) {
         setNotification(error.response.data.error, 'red')
       } else {
         setNotification('an error occured', 'red')
       }
     }
-  }
+  })
 
   const handleLikeBlog = async selectedBlog => {
     try {
@@ -146,7 +150,9 @@ const App = () => {
           </button>
         </p>
         <Togglable buttonLabel='new blog' ref={blogFormRef}>
-          <BlogForm handleCreateBlog={handleCreateBlog} />
+          <BlogForm
+            handleCreateBlog={props => createBlogMutation.mutate(props)}
+          />
         </Togglable>
         <br />
         <div>
@@ -164,6 +170,14 @@ const App = () => {
     )
   }
 
+  if (blogsQuery.isLoading) {
+    return (
+      <div>
+        <h2>Blogs</h2>
+        <p>blogs data is loading</p>
+      </div>
+    )
+  }
   return (
     <div>
       <h2>Blogs</h2>
