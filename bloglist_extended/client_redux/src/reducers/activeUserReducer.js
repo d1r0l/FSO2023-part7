@@ -19,7 +19,7 @@ export const activeUserSlice = createSlice({
 
 export const { setActiveUser, removeActiveUser } = activeUserSlice.actions
 
-export const initializeUser = () => {
+export const initializeActiveUser = () => {
   return dispatch => {
     const storedUser = window.localStorage.getItem('loggedBloglistAppUser')
     if (storedUser) {
