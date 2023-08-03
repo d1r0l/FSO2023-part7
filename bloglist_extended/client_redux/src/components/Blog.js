@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { likeBlog, deleteBlog } from '../reducers/blogsReducer'
 
 const Blog = ({ blog }) => {
@@ -27,7 +28,9 @@ const Blog = ({ blog }) => {
     <div style={blogStyle} className='blog'>
       <div>
         <span>
-          {blog.title} by {blog.author}{' '}
+          <Link to={`/blogs/${blog.id}`}>
+            {blog.title} by {blog.author}
+          </Link>
         </span>
         <button type='button' onClick={toggleVisibility}>
           {visible ? 'hide' : 'view'}

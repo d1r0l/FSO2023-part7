@@ -11,6 +11,7 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import Users from './components/Users'
 import UserPage from './components/UserPage'
+import BlogPage from './components/BlogPage'
 
 const App = () => {
   const blogsSelector = state => state.blogs
@@ -35,7 +36,6 @@ const App = () => {
         <Togglable buttonLabel='new blog' ref={blogFormRef}>
           <BlogForm blogFormRef={blogFormRef} />
         </Togglable>
-        <br />
         <div>
           {sortBlogs(blogs).map(blog => (
             <Blog key={blog.id} blog={blog} />
@@ -64,6 +64,7 @@ const App = () => {
               <Route path='/' element={<BlogList />} />
               <Route path='users' element={<Users />} />
               <Route path='users/:userId' element={<UserPage />} />
+              <Route path='blogs/:blogId' element={<BlogPage />} />
             </Routes>
           </div>
         ) : (
