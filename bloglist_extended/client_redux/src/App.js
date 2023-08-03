@@ -10,7 +10,7 @@ import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import Users from './components/Users'
-import User from './components/User'
+import UserPage from './components/UserPage'
 
 const App = () => {
   const blogsSelector = state => state.blogs
@@ -63,7 +63,7 @@ const App = () => {
             <Routes>
               <Route path='/' element={<BlogList />} />
               <Route path='users' element={<Users />} />
-              <Route path='users/:userId' element={<User />} />
+              <Route path='users/:userId' element={<UserPage />} />
             </Routes>
           </div>
         ) : (
