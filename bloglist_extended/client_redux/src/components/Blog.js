@@ -24,6 +24,10 @@ const Blog = ({ blog }) => {
     marginBottom: 5
   }
 
+  const viewBtnStyle = {
+    marginLeft: 4
+  }
+
   return (
     <div style={blogStyle} className='blog'>
       <div>
@@ -32,7 +36,7 @@ const Blog = ({ blog }) => {
             {blog.title} by {blog.author}
           </Link>
         </span>
-        <button type='button' onClick={toggleVisibility}>
+        <button style={viewBtnStyle} type='button' onClick={toggleVisibility}>
           {visible ? 'hide' : 'view'}
         </button>
       </div>

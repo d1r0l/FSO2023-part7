@@ -49,7 +49,7 @@ const App = () => {
   return (
     <div>
       <BrowserRouter>
-        <NavMenu />
+        {activeUser ? <NavMenu /> : null}
         <h2>Blogs</h2>
         <Notification />
         {activeUser ? (
