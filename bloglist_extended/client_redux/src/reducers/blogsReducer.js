@@ -135,4 +135,38 @@ export const deleteBlog = (selectedBlog, activeUser) => {
   }
 }
 
+export const addComment = (selectedBlog, newComment, activeUser) => {
+  return async dispatch => {
+    try {
+      const commentToSend = { comment: newComment }
+      const respondedBlog = await blogsService.addComment(
+        selectedBlog,
+        commentToSend,
+        activeUser.token
+      )
+      const updatedBlog = {
+        ...respondedBlog,
+        user: selectedBlog.user
+      }
+      dispatch(replaceBlog(updatedBlog))
+      dispatch(
+        makeNotification({
+          text: `a comment "${newComment}" successfully added`,
+          color: 'green'
+        })
+      )
+      return true
+    } catch (error) {
+      if (error.response.data.error) {
+        dispatch(
+          makeNotification({ text: error.response.data.error, color: 'red' })
+        )
+      } else {
+        dispatch(makeNotification({ text: 'an error occured', color: 'red' }))
+      }
+      return false
+    }
+  }
+}
+
 export default blogsSlice.reducer

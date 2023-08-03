@@ -48,4 +48,18 @@ blogsRouter.put('/:id', async (request, response) => {
   }
 })
 
+blogsRouter.post('/:id/comments', async (request, response) => {
+  if (!request.user) throw new Error('invalid user id')
+  try {
+    const result = await Blog.findByIdAndUpdate(
+      request.params.id,
+      { $push: { comments: request.body.comment } },
+      { new: true }
+    )
+    response.json(result)
+  } catch {
+    response.status(400).end()
+  }
+})
+
 module.exports = blogsRouter

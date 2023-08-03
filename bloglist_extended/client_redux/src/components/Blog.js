@@ -48,7 +48,7 @@ const Blog = ({ blog }) => {
           like
         </button>
         <br />
-        <span>{blog.user.name}</span>
+        <Link to={`/users/${blog.user.id}`}>{blog.user.name}</Link>
         <br />
         {blog.user.id === activeUser.id && (
           <button onClick={() => dispatch(deleteBlog(blog, activeUser))}>

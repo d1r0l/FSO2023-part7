@@ -50,7 +50,7 @@ const App = () => {
     <div>
       <BrowserRouter>
         {activeUser ? <NavMenu /> : null}
-        <h2>Blogs</h2>
+        <h2>BlogList App</h2>
         <Notification />
         {activeUser ? (
           <div>

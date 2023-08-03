@@ -20,17 +20,26 @@ const createNew = async (newBlog, token) => {
   return request.data
 }
 
-const addLike = async (Blog, token) => {
+const addLike = async (blog, token) => {
   const request = await axios.put(
-    `${baseUrl}/${Blog.id}`,
-    Blog,
+    `${baseUrl}/${blog.id}`,
+    blog,
     authConfig(token)
   )
   return request.data
 }
 
-const deleteBlog = async (Blog, token) => {
-  await axios.delete(`${baseUrl}/${Blog.id}`, authConfig(token))
+const deleteBlog = async (blog, token) => {
+  await axios.delete(`${baseUrl}/${blog.id}`, authConfig(token))
 }
 
-export default { getAll, createNew, addLike, deleteBlog }
+const addComment = async (blog, comment, token) => {
+  const request = await axios.post(
+    `${baseUrl}/${blog.id}/comments`,
+    comment,
+    authConfig(token)
+  )
+  return request.data
+}
+
+export default { getAll, createNew, addLike, deleteBlog, addComment }
