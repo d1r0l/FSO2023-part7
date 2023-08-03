@@ -15,12 +15,11 @@ import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import Users from './components/Users'
 
 const App = () => {
   const blogsSelector = state => state.blogs
   const blogs = useSelector(blogsSelector)
-  const usersSelector = state => state.users
-  const users = useSelector(usersSelector)
   const activeUserSelector = state => state.activeUser
   const activeUser = useSelector(activeUserSelector)
 
@@ -48,24 +47,6 @@ const App = () => {
             <Blog key={blog.id} blog={blog} />
           ))}
         </div>
-      </div>
-    )
-  }
-
-  const Users = () => {
-    return (
-      <div>
-        <h2>Users</h2>
-        <table>
-          <tbody>
-            {users.map(user => (
-              <tr key={user.id}>
-                <td>{user.name}</td>
-                <td>{user.blogs.length}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </div>
     )
   }
