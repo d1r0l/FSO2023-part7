@@ -1,12 +1,6 @@
-/* eslint-disable react/prop-types */
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  RouterProvider,
-  Route
-} from 'react-router-dom'
+import { BrowserRouter, Route, Link, Routes } from 'react-router-dom'
 import { initializeBlogs } from './reducers/blogsReducer'
 import { initializeActiveUser, logoutUser } from './reducers/activeUserReducer'
 import { initializeUsers } from './reducers/usersReducer'
@@ -16,6 +10,7 @@ import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import Users from './components/Users'
+import User from './components/User'
 
 const App = () => {
   const blogsSelector = state => state.blogs
@@ -23,9 +18,8 @@ const App = () => {
   const activeUserSelector = state => state.activeUser
   const activeUser = useSelector(activeUserSelector)
 
-  const blogFormRef = useRef()
-
   const dispatch = useDispatch()
+  const blogFormRef = useRef()
 
   useEffect(() => {
     dispatch(initializeActiveUser())
@@ -51,32 +45,31 @@ const App = () => {
     )
   }
 
-  const router = createBrowserRouter(
-    createRoutesFromElements(
-      <>
-        <Route path='/' element={<BlogList />} />
-        <Route path='/users' element={<Users />} />
-      </>
-    )
-  )
-
   return (
     <div>
-      <h2>Blogs</h2>
-      <Notification />
-      {activeUser ? (
-        <div>
-          <p>
-            {activeUser.name} logged in&nbsp;
-            <button type='button' onClick={() => dispatch(logoutUser())}>
-              logout
-            </button>
-          </p>
-          <RouterProvider router={router} />
-        </div>
-      ) : (
-        <LoginForm />
-      )}
+      <BrowserRouter>
+        <h2>
+          <Link to='/'>Blogs</Link>
+        </h2>
+        <Notification />
+        {activeUser ? (
+          <div>
+            <p>
+              {activeUser.name} logged in&nbsp;
+              <button type='button' onClick={() => dispatch(logoutUser())}>
+                logout
+              </button>
+            </p>
+            <Routes>
+              <Route path='/' element={<BlogList />} />
+              <Route path='users' element={<Users />} />
+              <Route path='users/:userId' element={<User />} />
+            </Routes>
+          </div>
+        ) : (
+          <LoginForm />
+        )}
+      </BrowserRouter>
     </div>
   )
 }
