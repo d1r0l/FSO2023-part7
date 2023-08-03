@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { BrowserRouter, Route, Link, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { initializeBlogs } from './reducers/blogsReducer'
-import { initializeActiveUser, logoutUser } from './reducers/activeUserReducer'
+import { initializeActiveUser } from './reducers/activeUserReducer'
 import { initializeUsers } from './reducers/usersReducer'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
@@ -12,6 +12,7 @@ import Togglable from './components/Togglable'
 import Users from './components/Users'
 import UserPage from './components/UserPage'
 import BlogPage from './components/BlogPage'
+import NavMenu from './components/NavMenu'
 
 const App = () => {
   const blogsSelector = state => state.blogs
@@ -48,18 +49,11 @@ const App = () => {
   return (
     <div>
       <BrowserRouter>
-        <h2>
-          <Link to='/'>Blogs</Link>
-        </h2>
+        <NavMenu />
+        <h2>Blogs</h2>
         <Notification />
         {activeUser ? (
           <div>
-            <p>
-              {activeUser.name} logged in&nbsp;
-              <button type='button' onClick={() => dispatch(logoutUser())}>
-                logout
-              </button>
-            </p>
             <Routes>
               <Route path='/' element={<BlogList />} />
               <Route path='users' element={<Users />} />
