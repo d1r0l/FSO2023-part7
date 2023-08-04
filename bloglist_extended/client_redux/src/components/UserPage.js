@@ -2,8 +2,7 @@ import { useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 
 const UserPage = () => {
-  const usersSelector = state => state.users
-  const users = useSelector(usersSelector)
+  const users = useSelector(state => state.users)
   const { userId } = useParams()
   const user = users.find(user => user.id === userId)
 

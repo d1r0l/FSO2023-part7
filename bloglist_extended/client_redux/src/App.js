@@ -15,10 +15,7 @@ import BlogPage from './components/BlogPage'
 import NavMenu from './components/NavMenu'
 
 const App = () => {
-  const blogsSelector = state => state.blogs
-  const blogs = useSelector(blogsSelector)
-  const activeUserSelector = state => state.activeUser
-  const activeUser = useSelector(activeUserSelector)
+  const activeUser = useSelector(state => state.activeUser)
 
   const dispatch = useDispatch()
   const blogFormRef = useRef()
@@ -29,16 +26,17 @@ const App = () => {
     dispatch(initializeUsers())
   }, [])
 
-  const sortBlogs = blogs => [...blogs].sort((a, b) => b.likes - a.likes)
-
   const BlogList = () => {
+    const blogs = useSelector(state => state.blogs)
+    const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
+
     return (
       <div>
         <Togglable buttonLabel='new blog' ref={blogFormRef}>
           <BlogForm blogFormRef={blogFormRef} />
         </Togglable>
         <div>
-          {sortBlogs(blogs).map(blog => (
+          {sortedBlogs.map(blog => (
             <Blog key={blog.id} blog={blog} />
           ))}
         </div>

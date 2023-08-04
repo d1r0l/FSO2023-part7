@@ -6,8 +6,7 @@ import { likeBlog, deleteBlog } from '../reducers/blogsReducer'
 
 const Blog = ({ blog }) => {
   const [visible, setVisible] = useState(false)
-  const loggedUserSelector = state => state.activeUser
-  const activeUser = useSelector(loggedUserSelector)
+  const activeUser = useSelector(state => state.activeUser)
 
   const dispatch = useDispatch()
 

@@ -12,8 +12,7 @@ const elementsSlyle = {
 }
 
 const NavMenu = () => {
-  const activeUserSelector = state => state.activeUser
-  const activeUser = useSelector(activeUserSelector)
+  const activeUser = useSelector(state => state.activeUser)
 
   const dispatch = useDispatch()
 

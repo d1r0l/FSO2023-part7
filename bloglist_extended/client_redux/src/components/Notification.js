@@ -1,10 +1,8 @@
 import { useSelector } from 'react-redux/es/hooks/useSelector'
 
 const Notification = () => {
-  const notificationTextSelector = state => state.notification.text
-  const notificationColorSelector = state => state.notification.color
-  const text = useSelector(notificationTextSelector)
-  const color = useSelector(notificationColorSelector)
+  const text = useSelector(state => state.notification.text)
+  const color = useSelector(state => state.notification.color)
 
   if (text === '') return null
   else {

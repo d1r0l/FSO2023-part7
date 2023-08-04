@@ -5,10 +5,8 @@ import { deleteBlog, likeBlog, addComment } from '../reducers/blogsReducer'
 
 const BlogPage = () => {
   const [comment, setComment] = useState('')
-  const blogsSelector = state => state.blogs
-  const blogs = useSelector(blogsSelector)
-  const activeUserSelector = state => state.activeUser
-  const activeUser = useSelector(activeUserSelector)
+  const blogs = useSelector(state => state.blogs)
+  const activeUser = useSelector(state => state.activeUser)
   const { blogId } = useParams()
   const blog = blogs.find(blog => blog.id === blogId)
 

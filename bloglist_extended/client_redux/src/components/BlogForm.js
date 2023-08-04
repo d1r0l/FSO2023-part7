@@ -7,8 +7,7 @@ const BlogForm = ({ blogFormRef }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
-  const loggedUserSelector = state => state.activeUser
-  const activeUser = useSelector(loggedUserSelector)
+  const activeUser = useSelector(state => state.activeUser)
   const dispatch = useDispatch()
 
   const handleSubmit = async event => {
