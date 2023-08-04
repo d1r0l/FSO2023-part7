@@ -40,15 +40,6 @@ const BlogPage = () => {
         </button>
       )}
       <h3>Comments:</h3>
-      {blog.comments.length === 0 ? (
-        <p>Comment section is empty</p>
-      ) : (
-        <ul>
-          {blog.comments.map((comment, index) => (
-            <li key={index}>{comment}</li>
-          ))}
-        </ul>
-      )}
       <form>
         <input
           id='input-comment'
@@ -61,6 +52,15 @@ const BlogPage = () => {
           add comment
         </button>
       </form>
+      {blog.comments.length === 0 ? (
+        <p>no comments</p>
+      ) : (
+        <ul>
+          {blog.comments.map((comment, index) => (
+            <li key={index}>{comment}</li>
+          ))}
+        </ul>
+      )}
     </div>
   )
 }
