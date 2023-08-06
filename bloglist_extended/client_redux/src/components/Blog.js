@@ -38,7 +38,7 @@ const Blog = ({ blog }) => {
 
   return (
     <Grid item md={6} xs={12}>
-      <Card raised={true}>
+      <Card>
         <CardContent sx={{ flex: 1 }}>
           <Typography variant='h5' noWrap>
             <Link component={RouterLink} to={`/blogs/${blog.id}`} variant='h5'>

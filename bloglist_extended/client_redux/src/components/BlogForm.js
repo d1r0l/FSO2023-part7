@@ -2,7 +2,7 @@ import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { createBlog } from '../reducers/blogsReducer'
-import { Box, Button, Container, TextField } from '@mui/material'
+import { Box, Button, TextField } from '@mui/material'
 
 const BlogForm = ({ blogFormRef }) => {
   const [title, setTitle] = useState('')
@@ -30,7 +30,7 @@ const BlogForm = ({ blogFormRef }) => {
   }
 
   return (
-    <Container component='main'>
+    <Box component='main'>
       <Box component='form' onSubmit={handleSubmit} noValidate>
         <TextField
           id='input-title'
@@ -80,7 +80,7 @@ const BlogForm = ({ blogFormRef }) => {
           create
         </Button>
       </Box>
-    </Container>
+    </Box>
   )
 }
 

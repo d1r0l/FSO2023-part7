@@ -13,7 +13,8 @@ import Users from './components/Users'
 import UserPage from './components/UserPage'
 import BlogPage from './components/BlogPage'
 import NavMenu from './components/NavMenu'
-import { Container, Grid, Typography } from '@mui/material'
+import { Box, Container, Grid } from '@mui/material'
+import logo from './img/logo.png'
 
 const App = () => {
   const activeUser = useSelector(state => state.activeUser)
@@ -48,15 +49,9 @@ const App = () => {
   return (
     <Container>
       <BrowserRouter>
-        <Typography
-          component='h2'
-          variant='h5'
-          color='inherit'
-          align='center'
-          sx={{ fontWeight: 'bold' }}
-        >
-          BlogList App
-        </Typography>
+        <Box align='center' sx={{ my: { xs: 2, md: 4 } }}>
+          <img src={logo} alt='BlogList Logo' width='200' />
+        </Box>
         {activeUser ? <NavMenu /> : null}
         <Notification />
         {activeUser ? (
