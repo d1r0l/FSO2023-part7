@@ -1,8 +1,17 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
 import { likeBlog, deleteBlog } from '../reducers/blogsReducer'
+import {
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  Link,
+  Grid,
+  CardActions
+} from '@mui/material'
 
 const Blog = ({ blog }) => {
   const [visible, setVisible] = useState(false)
@@ -10,52 +19,86 @@ const Blog = ({ blog }) => {
 
   const dispatch = useDispatch()
 
-  const toggleVisibility = () => setVisible(!visible)
+  const toggleVisibility = event => {
+    event.preventDefault()
+    setVisible(!visible)
+  }
+
+  const handleLike = event => {
+    event.preventDefault()
+    dispatch(likeBlog(blog, activeUser))
+  }
+
+  const handleDelete = event => {
+    event.preventDefault()
+    dispatch(deleteBlog(blog, activeUser))
+  }
 
   const showWhenVisible = { display: visible ? '' : 'none' }
 
-  const blogStyle = {
-    paddingTop: 3,
-    paddingLeft: 4,
-    paddingBottom: 3,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
-
-  const viewBtnStyle = {
-    marginLeft: 4
-  }
-
   return (
-    <div style={blogStyle} className='blog'>
-      <div>
-        <span>
-          <Link to={`/blogs/${blog.id}`}>
-            {blog.title} by {blog.author}
-          </Link>
-        </span>
-        <button style={viewBtnStyle} type='button' onClick={toggleVisibility}>
-          {visible ? 'hide' : 'view'}
-        </button>
-      </div>
-      <div style={showWhenVisible} className='togglableContent'>
-        <span>{blog.url}</span>
-        <br />
-        <span>likes: {blog.likes} </span>
-        <button onClick={() => dispatch(likeBlog(blog, activeUser))}>
-          like
-        </button>
-        <br />
-        <Link to={`/users/${blog.user.id}`}>{blog.user.name}</Link>
-        <br />
-        {blog.user.id === activeUser.id && (
-          <button onClick={() => dispatch(deleteBlog(blog, activeUser))}>
-            delete
-          </button>
-        )}
-      </div>
-    </div>
+    <Grid item md={6} xs={12}>
+      <Card raised={true}>
+        <CardContent sx={{ flex: 1 }}>
+          <Typography variant='h5' noWrap>
+            <Link component={RouterLink} to={`/blogs/${blog.id}`} variant='h5'>
+              {blog.title}
+            </Link>
+          </Typography>
+          <Typography variant='body1' noWrap>
+            by {blog.author}
+          </Typography>
+          <div style={showWhenVisible}>
+            <Typography variant='body1'>likes: {blog.likes}</Typography>
+            <Typography variant='body1' noWrap>
+              <Link href={blog.url} variant='body1'>
+                {blog.url}
+              </Link>
+            </Typography>
+            <Typography variant='body1' noWrap>
+              submitted by{' '}
+              <Link component={RouterLink} to={`/users/${blog.user.id}`}>
+                {blog.user.name}
+              </Link>
+            </Typography>
+          </div>
+        </CardContent>
+        <CardActions>
+          <Button
+            type='button'
+            onClick={toggleVisibility}
+            color='primary'
+            variant='contained'
+            size='small'
+          >
+            {visible ? 'less info' : 'more info'}
+          </Button>
+          <Button
+            style={showWhenVisible}
+            type='button'
+            onClick={handleLike}
+            color='primary'
+            variant='outlined'
+            size='small'
+          >
+            like
+          </Button>
+          {blog.user.id === activeUser.id && (
+            <Button
+              style={showWhenVisible}
+              type='button'
+              onClick={handleDelete}
+              onMouseDown={event => event.stopPropagation()}
+              color='primary'
+              variant='outlined'
+              size='small'
+            >
+              delete
+            </Button>
+          )}
+        </CardActions>
+      </Card>
+    </Grid>
   )
 }
 

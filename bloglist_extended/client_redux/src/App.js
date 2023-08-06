@@ -13,6 +13,7 @@ import Users from './components/Users'
 import UserPage from './components/UserPage'
 import BlogPage from './components/BlogPage'
 import NavMenu from './components/NavMenu'
+import { Container, Grid, Typography } from '@mui/material'
 
 const App = () => {
   const activeUser = useSelector(state => state.activeUser)
@@ -35,20 +36,28 @@ const App = () => {
         <Togglable buttonLabel='new blog' ref={blogFormRef}>
           <BlogForm blogFormRef={blogFormRef} />
         </Togglable>
-        <div>
+        <Grid container spacing={2}>
           {sortedBlogs.map(blog => (
             <Blog key={blog.id} blog={blog} />
           ))}
-        </div>
+        </Grid>
       </div>
     )
   }
 
   return (
-    <div>
+    <Container>
       <BrowserRouter>
+        <Typography
+          component='h2'
+          variant='h5'
+          color='inherit'
+          align='center'
+          sx={{ fontWeight: 'bold' }}
+        >
+          BlogList App
+        </Typography>
         {activeUser ? <NavMenu /> : null}
-        <h2>BlogList App</h2>
         <Notification />
         {activeUser ? (
           <div>
@@ -63,7 +72,7 @@ const App = () => {
           <LoginForm />
         )}
       </BrowserRouter>
-    </div>
+    </Container>
   )
 }
 
