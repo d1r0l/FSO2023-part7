@@ -2,6 +2,7 @@ import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { createBlog } from '../reducers/blogsReducer'
+import { Box, Button, Container, TextField } from '@mui/material'
 
 const BlogForm = ({ blogFormRef }) => {
   const [title, setTitle] = useState('')
@@ -29,38 +30,57 @@ const BlogForm = ({ blogFormRef }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className='blogForm'>
-      title:
-      <input
-        id='input-title'
-        type='text'
-        name='title'
-        value={title}
-        onChange={({ target }) => setTitle(target.value)}
-      />
-      <br />
-      author:
-      <input
-        id='input-author'
-        type='text'
-        name='author'
-        value={author}
-        onChange={({ target }) => setAuthor(target.value)}
-      />
-      <br />
-      url:
-      <input
-        id='input-url'
-        type='text'
-        name='url'
-        value={url}
-        onChange={({ target }) => setUrl(target.value)}
-      />
-      <br />
-      <button id='button-create' type='submit'>
-        create
-      </button>
-    </form>
+    <Container component='main'>
+      <Box component='form' onSubmit={handleSubmit} noValidate>
+        <TextField
+          id='input-title'
+          type='text'
+          name='title'
+          value={title}
+          onChange={({ target }) => setTitle(target.value)}
+          label='Title'
+          variant='outlined'
+          margin='dense'
+          required
+          fullWidth
+          autoFocus
+        />
+        <TextField
+          id='input-author'
+          type='text'
+          name='author'
+          value={author}
+          onChange={({ target }) => setAuthor(target.value)}
+          label='Author'
+          variant='outlined'
+          margin='dense'
+          required
+          fullWidth
+        />
+        <TextField
+          id='input-url'
+          type='text'
+          name='url'
+          value={url}
+          onChange={({ target }) => setUrl(target.value)}
+          label='Url'
+          variant='outlined'
+          margin='dense'
+          required
+          fullWidth
+        />
+        <br />
+        <Button
+          id='button-create'
+          type='submit'
+          variant='contained'
+          fullWidth
+          sx={{ my: 1 }}
+        >
+          create
+        </Button>
+      </Box>
+    </Container>
   )
 }
 
