@@ -49,9 +49,16 @@ const App = () => {
   return (
     <Container>
       <BrowserRouter>
-        <Box align='center' sx={{ my: { xs: 2, md: 4 } }}>
-          <img src={logo} alt='BlogList Logo' width='200' />
-        </Box>
+        <Box
+          component='img'
+          align='center'
+          src={logo}
+          maxWidth='200'
+          sx={{
+            my: { xs: 2, md: 4 },
+            maxWidth: { xs: 145, md: 290 }
+          }}
+        />
         {activeUser ? <NavMenu /> : null}
         <Notification />
         {activeUser ? (

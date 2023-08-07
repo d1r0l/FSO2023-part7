@@ -1,30 +1,57 @@
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  Grid,
+  Typography
+} from '@mui/material'
 
 const Users = () => {
   const users = useSelector(state => state.users)
 
   return (
     <div>
-      <h2>Users</h2>
-      <table>
-        <tbody>
-          <tr>
-            <td></td>
-            <td>
-              <b>blogs created:</b>
-            </td>
-          </tr>
-          {users.map(user => (
-            <tr key={user.id}>
-              <td>
-                <Link to={`/users/${user.id}`}>{user.name}</Link>
-              </td>
-              <td>{user.blogs.length}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Typography
+        component='h2'
+        variant='h3'
+        gutterBottom
+        sx={{ fontWeight: 'bold' }}
+      >
+        Users
+      </Typography>
+      <Grid container>
+        {users.map(user => (
+          <Grid key={user.id} item xs={12} pb={1}>
+            <Card>
+              <CardActionArea component={RouterLink} to={`/users/${user.id}`}>
+                <CardContent sx={{ flex: 1 }}>
+                  <Grid
+                    container
+                    sx={{
+                      flexWrap: 'wrap',
+                      flexDirection: { xs: 'column', sm: 'row' },
+                      justifyContent: {
+                        sm: 'space-between'
+                      }
+                    }}
+                  >
+                    <Grid item>
+                      <Typography variant='h5'>{user.name}</Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant='h5' noWrap>
+                        Blogs created: {user.blogs.length}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
     </div>
   )
 }

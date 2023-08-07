@@ -4,10 +4,14 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import { Provider } from 'react-redux'
 import store from './store'
-import { createTheme, ThemeProvider } from '@mui/material/styles'
+import {
+  createTheme,
+  responsiveFontSizes,
+  ThemeProvider
+} from '@mui/material/styles'
 import { CssBaseline } from '@mui/material'
 
-const theme = createTheme({
+let theme = createTheme({
   palette: {
     primary: {
       light: '#48a871',
@@ -23,6 +27,7 @@ const theme = createTheme({
     }
   }
 })
+theme = responsiveFontSizes(theme)
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <ThemeProvider theme={theme}>
