@@ -54,17 +54,7 @@ const Blog = ({ blog }) => {
           </Typography>
           <div style={showWhenVisible}>
             <Typography variant='body1'>
-              <Link href={blog.url}>
-                <div
-                  style={{
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    width: '100%'
-                  }}
-                >
-                  {blog.url}
-                </div>
-              </Link>
+              <Link href={blog.url}>{blog.url}</Link>
             </Typography>
             <Typography display='inline' variant='body1' color='text.secondary'>
               submitted by&nbsp;

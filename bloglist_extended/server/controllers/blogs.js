@@ -1,5 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', {
@@ -31,6 +32,9 @@ blogsRouter.delete('/:id', async (request, response) => {
   if (!blog) throw new Error('invalid blog id')
   if (request.user._id.toString() === blog.user.toString()) {
     await Blog.findByIdAndRemove(request.params.id)
+    await User.findByIdAndUpdate(blog.user, {
+      $pull: { blogs: request.params.id }
+    })
     response.status(204).end()
   } else throw new Error('deletion rejected: blog created by another user')
 })
