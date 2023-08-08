@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { logoutUser } from '../reducers/activeUserReducer'
 import { Grid, Button, Stack, Typography } from '@mui/material'
@@ -7,6 +7,8 @@ const NavMenu = () => {
   const activeUser = useSelector(state => state.activeUser)
 
   const dispatch = useDispatch()
+  const location = useLocation()
+  const pathname = location.pathname
 
   return (
     <Grid
@@ -25,6 +27,7 @@ const NavMenu = () => {
               to='/'
               variant='contained'
               sx={{ width: 90 }}
+              {...(pathname === '/' && { disabled: true })}
             >
               Blogs
             </Button>
@@ -33,6 +36,7 @@ const NavMenu = () => {
               to='/users'
               variant='contained'
               sx={{ width: 90 }}
+              {...(pathname === '/users' && { disabled: true })}
             >
               Users
             </Button>
