@@ -1,4 +1,7 @@
+import { Alert, Snackbar } from '@mui/material'
 import { useSelector } from 'react-redux/es/hooks/useSelector'
+
+let open = true
 
 const Notification = () => {
   const text = useSelector(state => state.notification.text)
@@ -7,18 +10,19 @@ const Notification = () => {
   if (text === '') return null
   else {
     return (
-      <div
-        style={{
-          color: color,
-          background: 'lightgrey',
-          fontSize: 20,
-          borderStyle: 'solid',
-          borderRadius: 5,
-          padding: 10,
-          marginBottom: 10
-        }}
-      >
-        {text}
+      <div>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          open={open}
+          autoHideDuration={5000}
+        >
+          <Alert
+            severity={color === 'green' ? 'success' : 'error'}
+            sx={{ width: '100%' }}
+          >
+            {text}
+          </Alert>
+        </Snackbar>
       </div>
     )
   }
