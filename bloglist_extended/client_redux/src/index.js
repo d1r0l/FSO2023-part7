@@ -12,6 +12,15 @@ import {
 import { CssBaseline } from '@mui/material'
 
 let theme = createTheme({
+  components: {
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#f9f9f9'
+        }
+      }
+    }
+  },
   palette: {
     primary: {
       light: '#48a871',

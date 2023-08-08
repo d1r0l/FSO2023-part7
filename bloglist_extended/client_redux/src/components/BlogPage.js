@@ -1,18 +1,29 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams, Link as RouterLink } from 'react-router-dom'
+import { useParams, Link as RouterLink, useNavigate } from 'react-router-dom'
 import { deleteBlog, likeBlog, addComment } from '../reducers/blogsReducer'
-import { Typography, Link, Button, Box, Grid, Stack } from '@mui/material'
+import {
+  Typography,
+  Link,
+  Button,
+  Box,
+  Grid,
+  Stack,
+  Card,
+  TextField
+} from '@mui/material'
 import FavoriteIcon from '@mui/icons-material/Favorite'
+import CommentIcon from '@mui/icons-material/Comment'
 
 const BlogPage = () => {
   const [comment, setComment] = useState('')
-  const blogs = useSelector(state => state.blogs)
   const activeUser = useSelector(state => state.activeUser)
   const { blogId } = useParams()
+  const blogs = useSelector(state => state.blogs)
   const blog = blogs.find(blog => blog.id === blogId)
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   if (!blog) return null
 
@@ -24,12 +35,23 @@ const BlogPage = () => {
     if (dispatchSuccessful) setComment('')
   }
 
+  const handleDelete = async event => {
+    event.preventDefault()
+    await dispatch(deleteBlog(blog, activeUser))
+    navigate('/')
+  }
+
+  const handleLike = async event => {
+    event.preventDefault()
+    dispatch(likeBlog(blog, activeUser))
+  }
+
   return (
     <div>
       <Grid container>
         <Grid item xs={12} sm>
           <Typography
-            style={{ display: 'inline-block' }}
+            display='inline-block'
             component='h2'
             variant='h3'
             sx={{ fontWeight: 'bold' }}
@@ -38,7 +60,7 @@ const BlogPage = () => {
           </Typography>
           <div style={{ display: 'inline-block' }}>
             <Typography
-              style={{ display: 'inline-block' }}
+              display='inline-block'
               component='h2'
               variant='h3'
               color='text.secondary'
@@ -47,7 +69,7 @@ const BlogPage = () => {
               by&nbsp;
             </Typography>
             <Typography
-              style={{ display: 'inline-block' }}
+              display='inline-block'
               component='h2'
               variant='h3'
               sx={{ fontWeight: 'bold' }}
@@ -56,19 +78,17 @@ const BlogPage = () => {
               {blog.author}
             </Typography>
           </div>
-          <Link href={blog.url}>
-            <Typography
-              variant='h5'
-              gutterBottom
-              sx={{
-                wordBreak: 'break-all'
-              }}
-            >
-              {blog.url}
-            </Typography>
-          </Link>
           <Typography
-            style={{ display: 'inline-block' }}
+            variant='h5'
+            gutterBottom
+            sx={{
+              wordBreak: 'break-all'
+            }}
+          >
+            <Link href={blog.url}>{blog.url}</Link>
+          </Typography>
+          <Typography
+            display='inline-block'
             variant='body1'
             color='text.secondary'
             gutterBottom
@@ -84,6 +104,7 @@ const BlogPage = () => {
             height='100%'
             display='flex'
             justifyContent='space-evenly'
+            pb={{ xs: 2, sm: 0 }}
             flexDirection={{
               xs: 'row',
               sm: 'column'
@@ -96,7 +117,7 @@ const BlogPage = () => {
                 width: { xs: 180, sm: 90 },
                 height: { sm: 73 }
               }}
-              onClick={() => dispatch(likeBlog(blog, activeUser))}
+              onClick={handleLike}
               startIcon={<FavoriteIcon />}
             >
               {blog.likes}
@@ -105,7 +126,7 @@ const BlogPage = () => {
               <Button
                 variant='outlined'
                 sx={{ alignSelf: 'end', width: 90 }}
-                onClick={() => dispatch(deleteBlog(blog, activeUser))}
+                onClick={handleDelete}
               >
                 delete
               </Button>
@@ -113,32 +134,57 @@ const BlogPage = () => {
           </Stack>
         </Grid>
       </Grid>
-      <Box mt={2}>
-        <Typography variant='h5 ' sx={{ fontWeight: 'bold' }}>
-          Comments:
-        </Typography>
-        <form>
-          <input
-            id='input-comment'
-            type='text'
-            name='comment'
-            value={comment}
-            onChange={({ target }) => setComment(target.value)}
-          />
-          <button type='submit' onClick={handleClick}>
-            add comment
-          </button>
-        </form>
-        {blog.comments.length === 0 ? (
-          <p>no comments</p>
-        ) : (
-          <ul>
-            {blog.comments.map((comment, index) => (
-              <li key={index}>{comment}</li>
-            ))}
-          </ul>
-        )}
-      </Box>
+      <Card mt={2}>
+        <Box sx={{ p: 2 }}>
+          <Typography variant='h4' sx={{ fontWeight: 'bold' }}>
+            Comments:
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center'
+            }}
+          >
+            <TextField
+              id='input-comment'
+              type='text'
+              name='comment'
+              onChange={({ target }) => setComment(target.value)}
+              value={comment}
+              label='Write your comment here...'
+              margin='normal'
+              fullWidth
+            />
+            <Button
+              variant='outlined'
+              type='submit'
+              onClick={handleClick}
+              fullWidth
+            >
+              add comment
+            </Button>
+          </Box>
+          <Box mt={2}>
+            {blog.comments.length === 0 ? (
+              <Typography ml={1} variant='h6' color='text.secondary'>
+                Comment section is empty. Make a first comment!
+              </Typography>
+            ) : (
+              <Stack spacing={{ xs: 1, sm: 2 }} direction='column'>
+                {blog.comments.map((comment, index) => (
+                  <Box key={index} display='flex' alignItems='center'>
+                    <CommentIcon color='secondary' />
+                    <Typography ml={1} variant='h6'>
+                      {comment}
+                    </Typography>
+                  </Box>
+                ))}
+              </Stack>
+            )}
+          </Box>
+        </Box>
+      </Card>
     </div>
   )
 }

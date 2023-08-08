@@ -145,6 +145,12 @@ export const deleteBlog = (selectedBlog, activeUser) => {
 
 export const addComment = (selectedBlog, newComment, activeUser) => {
   return async dispatch => {
+    if (!newComment) {
+      dispatch(
+        makeNotification({ text: 'comment cannot be empty', color: 'red' })
+      )
+      return false
+    }
     try {
       const commentToSend = { comment: newComment }
       const respondedBlog = await blogsService.addComment(

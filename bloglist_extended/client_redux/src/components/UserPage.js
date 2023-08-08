@@ -34,7 +34,19 @@ const UserPage = () => {
             <Card>
               <CardActionArea component={RouterLink} to={`/blogs/${blog.id}`}>
                 <CardContent sx={{ flex: 1 }}>
-                  <Typography variant='h5'>{blog.title}</Typography>
+                  <Typography variant='h5' display='inline-block'>
+                    {blog.title}&nbsp;
+                  </Typography>
+                  <Typography
+                    variant='h5'
+                    display='inline-block'
+                    color='text.secondary'
+                  >
+                    by&nbsp;
+                  </Typography>
+                  <Typography variant='h5' display='inline-block'>
+                    {blog.author}
+                  </Typography>
                 </CardContent>
               </CardActionArea>
             </Card>
