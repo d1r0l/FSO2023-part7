@@ -1,5 +1,12 @@
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  Grid,
+  Typography
+} from '@mui/material'
 import { useSelector } from 'react-redux'
-import { Link, useParams } from 'react-router-dom'
+import { Link as RouterLink, useParams } from 'react-router-dom'
 
 const UserPage = () => {
   const users = useSelector(state => state.users)
@@ -10,15 +17,30 @@ const UserPage = () => {
 
   return (
     <div>
-      <h2>{user.name}</h2>
-      <h3>added blogs:</h3>
-      <ul>
+      <Typography
+        component='h2'
+        variant='h3'
+        gutterBottom
+        sx={{ fontWeight: 'bold' }}
+      >
+        {user.name}
+      </Typography>
+      <Typography variant='body1' color='text.secondary' gutterBottom>
+        added blogs:
+      </Typography>
+      <Grid container spacing={1}>
         {user.blogs.map(blog => (
-          <li key={blog.id}>
-            <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-          </li>
+          <Grid key={blog.id} item xs={12} md={6}>
+            <Card>
+              <CardActionArea component={RouterLink} to={`/blogs/${blog.id}`}>
+                <CardContent sx={{ flex: 1 }}>
+                  <Typography variant='h5'>{blog.title}</Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
         ))}
-      </ul>
+      </Grid>
     </div>
   )
 }

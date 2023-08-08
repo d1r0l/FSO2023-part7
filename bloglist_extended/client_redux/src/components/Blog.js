@@ -12,6 +12,7 @@ import {
   Grid,
   CardActions
 } from '@mui/material'
+import FavoriteIcon from '@mui/icons-material/Favorite'
 
 const Blog = ({ blog }) => {
   const [visible, setVisible] = useState(false)
@@ -40,27 +41,37 @@ const Blog = ({ blog }) => {
     <Grid item md={6} xs={12}>
       <Card>
         <CardContent sx={{ flex: 1 }}>
-          <Typography variant='h5' noWrap>
+          <Typography variant='h5'>
             <Link component={RouterLink} to={`/blogs/${blog.id}`} variant='h5'>
               {blog.title}
             </Link>
           </Typography>
-          <Typography variant='body1' noWrap>
-            by {blog.author}
+          <Typography display='inline' variant='body1' color='text.secondary'>
+            by&nbsp;
+          </Typography>
+          <Typography display='inline' variant='body1'>
+            {blog.author}
           </Typography>
           <div style={showWhenVisible}>
-            <Typography variant='body1'>likes: {blog.likes}</Typography>
-            <Typography variant='body1' noWrap>
-              <Link href={blog.url} variant='body1'>
-                {blog.url}
+            <Typography variant='body1'>
+              <Link href={blog.url}>
+                <div
+                  style={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    width: '100%'
+                  }}
+                >
+                  {blog.url}
+                </div>
               </Link>
             </Typography>
-            <Typography variant='body1' noWrap>
-              submitted by{' '}
-              <Link component={RouterLink} to={`/users/${blog.user.id}`}>
-                {blog.user.name}
-              </Link>
+            <Typography display='inline' variant='body1' color='text.secondary'>
+              submitted by&nbsp;
             </Typography>
+            <Link component={RouterLink} to={`/users/${blog.user.id}`}>
+              {blog.user.name}
+            </Link>
           </div>
         </CardContent>
         <CardActions>
@@ -80,8 +91,9 @@ const Blog = ({ blog }) => {
             color='primary'
             variant='outlined'
             size='small'
+            startIcon={<FavoriteIcon />}
           >
-            like
+            {blog.likes}
           </Button>
           {blog.user.id === activeUser.id && (
             <Button

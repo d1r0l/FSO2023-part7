@@ -20,10 +20,20 @@ const NavMenu = () => {
       <Grid item>
         <Grid container>
           <Stack direction='row' spacing={1}>
-            <Button component={Link} to='/' variant='contained'>
+            <Button
+              component={Link}
+              to='/'
+              variant='contained'
+              sx={{ width: 90 }}
+            >
               Blogs
             </Button>
-            <Button component={Link} to='/users' variant='contained'>
+            <Button
+              component={Link}
+              to='/users'
+              variant='contained'
+              sx={{ width: 90 }}
+            >
               Users
             </Button>
           </Stack>
@@ -34,6 +44,7 @@ const NavMenu = () => {
           <Stack direction='row' alignItems='center'>
             <Typography
               variant='caption'
+              color='primary.main'
               sx={{ display: { xs: 'none', sm: 'block' } }}
               noWrap
             >
@@ -41,8 +52,9 @@ const NavMenu = () => {
             </Typography>
             <Button
               type='button'
-              onClick={() => dispatch(logoutUser())}
               variant='contained'
+              sx={{ width: 90 }}
+              onClick={() => dispatch(logoutUser())}
             >
               logout
             </Button>

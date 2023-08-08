@@ -41,8 +41,16 @@ const Users = () => {
                       <Typography variant='h5'>{user.name}</Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant='h5' noWrap>
-                        Blogs created: {user.blogs.length}
+                      <Typography
+                        display='inline'
+                        variant='h5'
+                        color='text.secondary'
+                        noWrap
+                      >
+                        added blogs: &nbsp;
+                      </Typography>
+                      <Typography display='inline' variant='h5' noWrap>
+                        {user.blogs.length}
                       </Typography>
                     </Grid>
                   </Grid>
